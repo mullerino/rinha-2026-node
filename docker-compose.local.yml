@@ -1,0 +1,53 @@
+services:
+  lb:
+    image: haproxy:lts-alpine
+    entrypoint: ["haproxy"]
+    command: ["-f", "/usr/local/etc/haproxy/haproxy.cfg"]
+    ports:
+      - "9999:9999"
+    volumes:
+      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    depends_on:
+      - api1
+      - api2
+    deploy:
+      resources:
+        limits:
+          cpus: "0.05"
+          memory: "32MB"
+    cpus: "0.05"
+    mem_limit: "32m"
+
+  api1:
+    build:
+      context: .
+    image: rinha-2026-node-api:local
+    environment:
+      NODE_ENV: production
+      SEARCH_INDEX: bucketed
+    expose:
+      - "9999"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.475"
+          memory: "159MB"
+    cpus: "0.475"
+    mem_limit: "159m"
+
+  api2:
+    build:
+      context: .
+    image: rinha-2026-node-api:local
+    environment:
+      NODE_ENV: production
+      SEARCH_INDEX: bucketed
+    expose:
+      - "9999"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.475"
+          memory: "159MB"
+    cpus: "0.475"
+    mem_limit: "159m"

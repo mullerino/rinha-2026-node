@@ -1,0 +1,13 @@
+.git
+.agents
+.codex
+.cursor
+docs
+test
+scripts
+node_modules
+npm-debug.log
+results.json
+data/references.json
+docker-compose*.yml
+haproxy
