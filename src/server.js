@@ -4,7 +4,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { classify } from './classify.js';
-import { loadReferencesFromGzipJsonFile } from './references.js';
+import { loadReferencesFromBinaryFiles } from './references.js';
 
 const root = dirname(fileURLToPath(import.meta.url));
 const dataDir = join(root, '..', 'data');
@@ -15,7 +15,7 @@ const normalization = JSON.parse(
 const mccRisk = JSON.parse(readFileSync(join(dataDir, 'mcc_risk.json'), 'utf8'));
 
 console.error('Carregando references.json.gz…');
-const store = loadReferencesFromGzipJsonFile(
+const store = loadReferencesFromBinaryFiles(
   join(dataDir, 'references.json.gz'),
 );
 console.error(`Pronto: ${store.count} vetores.`);
