@@ -4,14 +4,19 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test \"src/**/*.test.js\"",
     "start": "node src/server.js",
+    "test": "node --test \"src/**/*.test.js\"",
+    "preprocess": "node scripts/preprocess.js",
     "eval": "node scripts/eval-detection.mjs",
-    "k6": "test -d test && cd test && k6 run test.js",
-    "k6:smoke": "test -d test && cd test && k6 run smoke.js",
-    "k6:dev": "test -d test && cd test && K6_RATE=20 K6_DURATION=30s K6_PRE_ALLOCATED_VUS=20 K6_MAX_VUS=50 K6_LIMIT=600 k6 run test.js",
-    "k6:docker:smoke": "docker run --rm --add-host=host.docker.internal:host-gateway -v \"$PWD/test:/scripts\" -w /scripts -e BASE_URL=http://host.docker.internal:9999 grafana/k6 run smoke.js",
-    "k6:docker:dev": "docker run --rm --add-host=host.docker.internal:host-gateway -v \"$PWD/test:/scripts\" -w /scripts -e BASE_URL=http://host.docker.internal:9999 -e K6_RATE=20 -e K6_DURATION=30s -e K6_PRE_ALLOCATED_VUS=20 -e K6_MAX_VUS=50 -e K6_LIMIT=600 grafana/k6 run test.js",
-    "k6:docker": "docker run --rm --add-host=host.docker.internal:host-gateway -v \"$PWD/test:/scripts\" -w /scripts -e BASE_URL=http://host.docker.internal:9999 grafana/k6 run test.js"
+    "bench:knn": "node --expose-gc scripts/bench-knn.mjs",
+    "infra:up": "docker compose -f docker-compose.local.yml up --build --force-recreate",
+    "infra:up:diagnostic": "docker compose -f docker-compose.diagnostic.yml up --build --force-recreate",
+    "infra:down": "docker compose -f docker-compose.local.yml down --remove-orphans",
+    "infra:down:diagnostic": "docker compose -f docker-compose.diagnostic.yml down --remove-orphans",
+    "infra:config": "docker compose -f docker-compose.local.yml config",
+    "infra:stats": "docker stats rinha-2026-node-lb-1 rinha-2026-node-api1-1 rinha-2026-node-api2-1",
+    "load:smoke": "docker run --rm --user \"$(id -u):$(id -g)\" --add-host=host.docker.internal:host-gateway -v \"$PWD/test:/scripts\" -w /scripts -e BASE_URL=http://host.docker.internal:9999 grafana/k6 run smoke.js",
+    "load:dev": "docker run --rm --user \"$(id -u):$(id -g)\" --add-host=host.docker.internal:host-gateway -v \"$PWD/test:/scripts\" -w /scripts -e BASE_URL=http://host.docker.internal:9999 -e LOAD_RATE=50 -e LOAD_DURATION=30s -e LOAD_PRE_ALLOCATED_VUS=20 -e LOAD_MAX_VUS=50 -e LOAD_LIMIT=600 grafana/k6 run test.js",
+    "load:full": "docker run --rm --user \"$(id -u):$(id -g)\" --add-host=host.docker.internal:host-gateway -v \"$PWD/test:/scripts\" -w /scripts -e BASE_URL=http://host.docker.internal:9999 grafana/k6 run test.js"
   }
 }
